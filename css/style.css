@@ -1,18 +1,28 @@
-.axis path,
-.axis line {
+/*Example 2.9*/
+.map {
+    border: medium solid #999;
+}
+
+/*Example 2.4*/
+
+.countries {
+    fill: #fff;
+    stroke: #e9e9e9;
+    stroke-width: 2px;
+}
+
+/*Example 2.7*/
+.gratLines {
     fill: none;
-    stroke: black;
+    stroke: #999;
     stroke-width: 1px;
-    shape-rendering: crispEdges;
 }
 
-.axis text {
-    font-family: sans-serif;
-    font-size: 0.9em;
+.gratBackground {
+    fill: #D5E3FF;
 }
 
-.title {
-    font-family: sans-serif;
-    font-size: 1.5em;
-    font-weight: bold;
+.states{
+    fill: #cd0000;
+    stroke: black;
 }
