@@ -1,5 +1,6 @@
 h1{
     font-family: cursive;
+    font-size: 32px;
     color: rgb(199, 2, 2);
     stroke: black;
     text-align: center;
@@ -98,7 +99,7 @@ h2{
 
 .footer {
     position: absolute;
-    top: 730px;
+    top: 740px;
     left: 120px;
     z-index: 10;
     font-family: Verdana;
@@ -113,7 +114,7 @@ h2{
     font-size: 18px;
     color: #fff;
     position: absolute;
-    top: 540px; /* Adjust this to place it below the bar chart */
+    top: 170px; /* Adjust this to place it below the bar chart */
     left: calc(52%); /* Align to match the bar chart's position */
     width: 40%; /* Optional: limit the width to the bar chart */
     text-align: left;

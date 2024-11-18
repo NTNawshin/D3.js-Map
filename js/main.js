@@ -146,11 +146,12 @@
 
     function createInfoPanel(attribute) {
         var infoText = {
-            "Happiness Index": "The <em>Happiness Index</em> offers a snapshot of how cheerful and satisfied residents feel across Germany’s states. Scores range from a cozy 6.2 to a sunnier 6.78, with Saxony-Anhalt and Schleswig-Holstein leading the happiness parade! These regions shine thanks to factors like strong social connections, a sense of community, and maybe even a touch of that crisp, refreshing northern air. <br><br>On the flip side, Berlin seems to be having a bit of a gloomy moment, landing at the lower end of the scale. But don’t worry, it’s nothing a little social sparkle and creative problem-solving can’t fix! This visualization is your chance to explore the joy map of Germany and spot opportunities to spread a little extra happiness where it’s needed most.",
+            "Happiness Index": "The <em>Happiness Index</em> offers a snapshot of how cheerful and satisfied residents feel across Germany’s states. Scores range from a cozy 6.2 to a sunnier 6.78, with Saxony-Anhalt and Schleswig-Holstein leading the happiness parade! These regions shine thanks to factors like strong social connections, a sense of community, and maybe even a touch of that crisp, refreshing northern air. <br><br>On the flip side, Berlin seems to be having a bit of a gloomy moment, landing at the lower end of the scale. But don’t worry, it’s nothing a little social sparkle and creative problem-solving can’t fix! This visualization is your chance to explore the joy map of Germany and spot opportunities to spread a little extra happiness where needed.",
             "GRP (€)": "The <em>Gross Regional Domestic Product (GRP)</em> per capita reveals the economic heartbeat of Germany’s states. <br><br>Hamburg sits at the top, boasting a GRP of €66,879, reflecting its thriving industries and global connections. Meanwhile, Saxony-Anhalt, with a GRP of €28,800, highlights a quieter economic pace but no less charm. These figures, expressed in nominal euros for easy comparison, offer a snapshot of economic performance and disparity across the country.",
             "Unemployment Rate (%)": "The <em>Unemployment Rate</em> offers a snapshot of Germany's labor market dynamics. <br><br>In 2020, Bremen faced the highest unemployment rate at 10.2%, reflecting significant challenges in its local economy. On the other hand, Bavaria led the way with the lowest rate at 3.1%, showcasing its strong employment opportunities and thriving industries. <br><br>These figures highlight the diverse economic realities across the German states. If you’re considering working in Germany, these figures can help you identify regions with thriving job markets and areas where opportunities might be harder to come by.",
             "Life Expectancy": "The <em>Life Expectancy</em> dataset reveals how long residents of Germany's states are expected to live, offering insights into regional health and living conditions. <br><br>Baden-Württemberg takes the lead with an impressive life expectancy of 81.88 years, reflecting its high standards of healthcare and quality of life. Meanwhile, Saxony-Anhalt records the lowest at 79.46 years, pointing to areas where public health initiatives might make a difference. These figures paint a fascinating picture of longevity across Germany, highlighting regional disparities in well-being.",
-            "Crime Rate": "The <em>Crime Rate</em> dataset provides a glimpse into public safety across Germany's states, measured per 100,000 people. Berlin reports the highest crime rate at 13,330, reflecting the challenges of managing safety in a bustling urban hub. In stark contrast, Bavaria enjoys the lowest rate at 4,291, showcasing its reputation for being one of the safest regions in the country. <br><br>Take a closer look at the map to explore how safety varies across the states and see how your region compares or where you would prefer to be!"
+            "Crime Rate": "The <em>Crime Rate</em> dataset provides a glimpse into public safety across Germany's states, measured per 100,000 people. Berlin reports the highest crime rate at 13,330, reflecting the challenges of managing safety in a bustling urban hub. In stark contrast, Bavaria enjoys the lowest rate at 4,291, showcasing its reputation for being one of the safest regions in the country. <br><br>Take a closer look at the map to explore how safety varies across the states and see how your region compares or where you would prefer to be!",
+            "default": "<--- Please select an attribute from the dropdown above to explore data insights."
         };
     
         // Get the footer container, create it if it doesn't exist
@@ -160,13 +161,13 @@
                 .append("div")
                 .attr("class", "infoPanel")
                 .style("text-align", "left")
-                .style("margin-top", "0px")
-                .style("padding", "20px")
-                .style("clear", "both");
+                .style("margin-bottom", "20px")
+                .style("padding", "10px")
+                .style("clear", "both")
         }
     
         // Update the footer text based on the current attribute
-        infoPanel.html(infoText[attribute]);
+        infoPanel.html(attribute ? infoText[attribute] : infoText["default"]);
     }
 
     function setGraticule(map, path) {
@@ -276,7 +277,9 @@
             .append("svg")
             .attr("width", chartWidth)
             .attr("height", chartHeight)
-            .attr("class", "chart");
+            .attr("class", "chart")
+            .style("margin-left", "240px") // Move the chart to the right
+            .style("margin-top", "-400px"); // Add vertical spacing
     
         // Create a background rectangle for the bar chart
         chart.append("rect")
