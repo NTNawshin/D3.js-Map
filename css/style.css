@@ -8,7 +8,7 @@ h1{
 h2{
     font-family:Arial, Helvetica, sans-serif;
     color: #f5e581;
-    font-size: 20px;
+    font-size: 22px;
     text-align: center;
 }
 .map {
@@ -51,7 +51,7 @@ h2{
 
 .chartTitle {
     font-family:Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     fill: #faf9f9;
     

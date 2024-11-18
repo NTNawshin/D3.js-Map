@@ -421,7 +421,7 @@
             case "Crime Rate":
                 yScale = d3.scaleLinear().range([0, chartHeight]).domain([000, 15000]);
                 yScaleRev = d3.scaleLinear().range([chartHeight, 0]).domain([0, 15]);
-                chartTitle = "Crime Rate per 100,000 people in Each State (in thousand)";
+                chartTitle = "Crime Rate per 100,000 people (in thousand)";
                 var chartTitle = d3.select(".chartTitle").text(chartTitle).style("padding", "5px");
         }
 
