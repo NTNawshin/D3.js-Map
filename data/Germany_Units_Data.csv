@@ -1,17 +1,17 @@
-﻿id,name,Happiness Index,GRP,Unemployment Rate (%),Life Expectancy,Crime Rate
-DE-BW,Baden-Württemberg,6.61,55793,3.6,81.88,4721
-DE-BV,Bavaria,6.77,57012,3.1,81.56,4291
-DE-BE,Berlin,6.2,49513,8.7,80.75,13330
-DE-BB,Brandenburg,6.74,34853,5.6,80.51,6260
-DE-HB,Bremen,6.35,58064,10.2,79.83,11608
-DE-HH,Hamburg,6.74,78904,6.9,80.95,10615
-DE-HE,Hessen,6.66,55360,4.9,81.32,5092
-DE-LS,Lower Saxony,6.59,45332,5.4,80.47,6147
-DE-MV,Mecklenburg-Vorpommern,6.6,34143,7.3,79.95,6444
-DE-NW,North-Rhein Westphalia,6.73,46812,6.9,80.47,6672
-DE-RP,Rhineland-Palatinate,6.62,41832,4.6,80.84,5517
-DE-SL,Saarland,6.46,43280,6.4,79.88,6740
-DE-SX,Saxony,6.58,37108,5.7,80.94,6477
+﻿id,name,Happiness Index,GRP (€),Unemployment Rate (%),Life Expectancy,Crime Rate
+DE-BW,Baden-Württemberg,6.61,47290,3.6,81.88,4721
+DE-BV,Bavaria,6.77,48323,3.1,81.56,4291
+DE-BE,Berlin,6.2,41967,8.7,80.75,13330
+DE-BB,Brandenburg,6.74,29541,5.6,80.51,6260
+DE-HB,Bremen,6.35,49215,10.2,79.83,11608
+DE-HH,Hamburg,6.74,66879,6.9,80.95,10615
+DE-HE,Hessen,6.66,46923,4.9,81.32,5092
+DE-LS,Lower Saxony,6.59,38423,5.4,80.47,6147
+DE-MV,Mecklenburg-Vorpommern,6.6,28940,7.3,79.95,6444
+DE-NW,North-Rhein Westphalia,6.73,39678,6.9,80.47,6672
+DE-RP,Rhineland-Palatinate,6.62,35457,4.6,80.84,5517
+DE-SL,Saarland,6.46,36684,6.4,79.88,6740
+DE-SX,Saxony,6.58,31453,5.7,80.94,6477
 DE-SA,Saxony-Anhalt,6.78,28800,7.1,79.46,7996
-DE-SH,Schleswig-Holstein,6.78,39773,5.2,80.48,5857
-DE-TH,Thuringia,6.45,35256,5.4,80.23,6556
+DE-SH,Schleswig-Holstein,6.78,33712,5.2,80.48,5857
+DE-TH,Thuringia,6.45,29883,5.4,80.23,6556

@@ -1,14 +1,14 @@
 //wrap everything in a function so nothing is in global scope
 (function () {
     //pseudo-global variables
-    var attrArray = ["Happiness Index", "GRP", "Unemployment Rate (%)", "Life Expectancy", "Crime Rate"]; //list of attributes
-    var expressed = attrArray[0]; //initial attribute
+    var attrArray = ["Happiness Index", "GRP (€)", "Unemployment Rate (%)", "Life Expectancy", "Crime Rate"]; 
+    var expressed = null; //initial attribute
 
     //chart frame dimensions
-    var chartWidth = window.innerWidth * 0.425,
-        chartHeight = 473,
-        leftPadding = 25,
-        rightPadding = 2,
+    var chartWidth = window.innerWidth * 0.4,
+        chartHeight = 360,
+        leftPadding = 20,
+        rightPadding = 240,
         topBottomPadding = 5,
         chartInnerWidth = chartWidth - leftPadding - rightPadding,
         chartInnerHeight = chartHeight - topBottomPadding * 2,
@@ -24,14 +24,32 @@
         .range([chartHeight, 0])
         .domain([6, 7]);
 
+    // Define different color scales for each attribute
+    var colorScales = {
+        "Happiness Index": d3.scaleQuantile().range(["#EDF8FB", "#B2E2E2", "#66C2A4", "#2CA25F", "#006D2C"]),
+        "GRP (€)": d3.scaleQuantile().range(["#EDF8FB", "#B2E2E2", "#66C2A4", "#2CA25F", "#006D2C"]),
+        "Unemployment Rate (%)": d3.scaleQuantile().range(["#FEF0D9", "#FDCC8A", "#FC8D59", "#E34A33", "#B30000"]),
+        "Life Expectancy": d3.scaleQuantile().range(["#EDF8FB", "#B2E2E2", "#66C2A4", "#2CA25F", "#006D2C"]),
+        "Crime Rate": d3.scaleQuantile().range(["#FEF0D9", "#FDCC8A", "#FC8D59", "#E34A33", "#B30000"])
+    };
+
+    var textColors = {
+        "Happiness Index": "#2CA25F",
+        "GRP (€)": "#2CA25F",
+        "Unemployment Rate (%)": "#E34A33",
+        "Life Expectancy": "#2CA25F",
+        "Crime Rate": "#E34A33"
+    };
+
     //begin script when window loads
     window.onload = setMap();
 
     //Example 1.3 line 4...set up choropleth map
     function setMap() {
         //map frame dimensions
-        var width = window.innerWidth * 0.5,
-            height = 460;
+        var width = window.innerWidth * 0.35,
+            height = 680;
+            
 
         //create new svg container for the map
         var map = d3
@@ -47,10 +65,13 @@
             .center([8, 51.2])
             .rotate([-2, 0, 0])
             .parallels([43, 62])
-            .scale(3000)
-            .translate([width / 2, height / 2]);
+            .scale(4200)
+            .translate([width / 2 , height / 2]);
 
         var path = d3.geoPath().projection(projection);
+
+        d3.select(".map")
+        .style("margin-left", "240px");
 
         //use Promise.all to parallelize asynchronous data loading
         var promises = [
@@ -65,18 +86,20 @@
                 europe = data[1],
                 germany = data[2];
 
-            setGraticule(map, path);
+            //setGraticule(map, path);
 
             //translate europe TopoJSON
-            var europeCountries = topojson.feature(europe, europe.objects.EuropeCountries),
-                germanstates = topojson.feature(germany, germany.objects.GermanStates).features;
+            //var europeCountries = topojson.feature(europe, europe.objects.EuropeCountries)
+            var germanstates = topojson.feature(germany, germany.objects.GermanStates).features;
 
             //add Europe countries to map
+            /*
             var countries = map
                 .append("path")
                 .datum(europeCountries)
                 .attr("class", "countries")
                 .attr("d", path);
+            */
 
             germanstates = joinData(germanstates, csvData);
 
@@ -89,14 +112,61 @@
 
             //add dropdown
             createDropdown(csvData);
-
+            createInfoPanel(expressed);
+            createFooter();       
         }
-        var source = "Data Sources: <br> Happiness Index data - www.glueckatlas.de <br> GRP, unemplyment rate and life expectancy data from wikipedia.com <br> Crime rate data - www.statista.com"
+
+        /*
+        var source = "Data Sources: <br> Happiness Index data - www.glueckatlas.de <br> GRP, unemployment rate and life expectancy data from wikipedia.com <br> Crime rate data - www.statista.com";
+
+        // Select the body and append a div for better styling and positioning
         var footer = d3
             .select("body")
-            .append("text")
+            .append("div") // Use a <div> for semantic and styling benefits
             .attr("class", "footer")
+            .style("text-align", "center") // Optional styling
+            .style("margin-top", "20px") // Optional styling
             .html(source);
+        */
+            
+    }
+    
+    function createFooter() {
+        var footerText = "Data Sources: <br> Happiness Index data - www.glueckatlas.de, GRP, unemployment rate and life expectancy data from wikipedia.com, Crime rate data - www.statista.com";
+        
+        d3.select("body")
+          .append("div")
+          .attr("class", "footer")
+          .style("text-align", "left")
+          .style("margin-top", "0px")
+          .style("padding", "120px")
+          .style("clear", "both")
+          .html(footerText);
+    }
+
+    function createInfoPanel(attribute) {
+        var infoText = {
+            "Happiness Index": "The <em>Happiness Index</em> offers a snapshot of how cheerful and satisfied residents feel across Germany’s states. Scores range from a cozy 6.2 to a sunnier 6.78, with Saxony-Anhalt and Schleswig-Holstein leading the happiness parade! These regions shine thanks to factors like strong social connections, a sense of community, and maybe even a touch of that crisp, refreshing northern air. <br><br>On the flip side, Berlin seems to be having a bit of a gloomy moment, landing at the lower end of the scale. But don’t worry, it’s nothing a little social sparkle and creative problem-solving can’t fix! This visualization is your chance to explore the joy map of Germany and spot opportunities to spread a little extra happiness where it’s needed most.",
+            "GRP (€)": "The <em>Gross Regional Domestic Product (GRP)</em> per capita reveals the economic heartbeat of Germany’s states. <br><br>Hamburg sits at the top, boasting a GRP of €66,879, reflecting its thriving industries and global connections. Meanwhile, Saxony-Anhalt, with a GRP of €28,800, highlights a quieter economic pace but no less charm. These figures, expressed in nominal euros for easy comparison, offer a snapshot of economic performance and disparity across the country.",
+            "Unemployment Rate (%)": "The <em>Unemployment Rate</em> offers a snapshot of Germany's labor market dynamics. <br><br>In 2020, Bremen faced the highest unemployment rate at 10.2%, reflecting significant challenges in its local economy. On the other hand, Bavaria led the way with the lowest rate at 3.1%, showcasing its strong employment opportunities and thriving industries. <br><br>These figures highlight the diverse economic realities across the German states. If you’re considering working in Germany, these figures can help you identify regions with thriving job markets and areas where opportunities might be harder to come by.",
+            "Life Expectancy": "The <em>Life Expectancy</em> dataset reveals how long residents of Germany's states are expected to live, offering insights into regional health and living conditions. <br><br>Baden-Württemberg takes the lead with an impressive life expectancy of 81.88 years, reflecting its high standards of healthcare and quality of life. Meanwhile, Saxony-Anhalt records the lowest at 79.46 years, pointing to areas where public health initiatives might make a difference. These figures paint a fascinating picture of longevity across Germany, highlighting regional disparities in well-being.",
+            "Crime Rate": "The <em>Crime Rate</em> dataset provides a glimpse into public safety across Germany's states, measured per 100,000 people. Berlin reports the highest crime rate at 13,330, reflecting the challenges of managing safety in a bustling urban hub. In stark contrast, Bavaria enjoys the lowest rate at 4,291, showcasing its reputation for being one of the safest regions in the country. <br><br>Take a closer look at the map to explore how safety varies across the states and see how your region compares or where you would prefer to be!"
+        };
+    
+        // Get the footer container, create it if it doesn't exist
+        var infoPanel = d3.select(".infoPanel");
+        if (infoPanel.empty()) {
+            infoPanel = d3.select("body")
+                .append("div")
+                .attr("class", "infoPanel")
+                .style("text-align", "left")
+                .style("margin-top", "0px")
+                .style("padding", "20px")
+                .style("clear", "both");
+        }
+    
+        // Update the footer text based on the current attribute
+        infoPanel.html(infoText[attribute]);
     }
 
     function setGraticule(map, path) {
@@ -143,26 +213,23 @@
         return germanstates;
     }
 
+    // Update makeColorScale to use the appropriate scale for the current attribute
     function makeColorScale(data) {
-        var colorClasses = [
-            "#FEF0D9",
-            "#FDCC8A",
-            "#FC8D59",
-            "#E34A33",
-            "#B30000"
-        ];
+        if (!expressed) {
+            // Return a single grey color scale when no attribute is selected
+            return d3.scaleQuantile().range(["#ccc"]);
+        }
+        // Select the appropriate color scale for the expressed attribute
+        var colorScale = colorScales[expressed];
 
-        //create color scale generator
-        var colorScale = d3.scaleQuantile().range(colorClasses);
-
-        //build array of all values of the expressed attribute
+        // Build array of all values of the expressed attribute
         var domainArray = [];
         for (var i = 0; i < data.length; i++) {
             var val = parseFloat(data[i][expressed]);
             domainArray.push(val);
         }
 
-        //assign array of expressed values as scale domain
+        // Assign array of expressed values as scale domain
         colorScale.domain(domainArray);
 
         return colorScale;
@@ -180,6 +247,9 @@
             })
             .attr("d", path)
             .style("fill", function (d) {
+                if (!expressed) {
+                    return "#ccc"; // Grey color when no data is selected
+                }
                 var value = d.properties[expressed];
                 if (value) {
                     return colorScale(d.properties[expressed]);
@@ -200,65 +270,53 @@
 
     //function to create coordinated bar chart
     function setChart(csvData, colorScale) {
-        //create a second svg element to hold the bar chart
+        // Create the bar chart SVG container
         var chart = d3
             .select("body")
             .append("svg")
             .attr("width", chartWidth)
             .attr("height", chartHeight)
             .attr("class", "chart");
-
-        //create a rectangle for chart background fill
-        var chartBackground = chart
-            .append("rect")
+    
+        // Create a background rectangle for the bar chart
+        chart.append("rect")
             .attr("class", "chartBackground")
             .attr("width", chartInnerWidth)
             .attr("height", chartInnerHeight)
             .attr("transform", translate);
-
-        //set bars for each province
+    
+        // Create bars
         var bars = chart
             .selectAll(".bar")
             .data(csvData)
             .enter()
             .append("rect")
-            .sort(function (a, b) {
-                return b[expressed] - a[expressed];
-            })
-            .attr("class", function (d) {
-                return "bar " + d.id;
-            })
+            .attr("class", "bar")
             .attr("width", chartInnerWidth / csvData.length - 1)
+            .attr("height", 0) // Initially no height
+            .attr("y", chartHeight - topBottomPadding) // Bars start at the bottom
+            .style("fill", "#ccc") // Grey default color
             .on("mouseover", function (event, d) {
                 highlight(d);
             })
             .on("mouseout", function (event, d) {
                 dehighlight(d);
             })
-            .on("mousemove", moveLabel);
-
-        //create a text element for the chart title
-        var chartTitle = chart
-            .append("text")
+            .on("mousemove", moveLabel); // Update label position
+    
+        // Create a text element for the chart title
+        chart.append("text")
             .attr("x", 40)
             .attr("y", 30)
-            .attr("class", "chartTitle");
-
-
-        //create axis
-        var axis = chart.append("g").attr("class", "axis").attr("transform", translate)
-
-        updateChart(bars, csvData.length, colorScale);
-
-        //create frame for chart border
-        var chartFrame = chart
-            .append("rect")
-            .attr("class", "chartFrame")
-            .attr("width", chartInnerWidth)
-            .attr("height", chartInnerHeight)
-            .attr("transform", translate);
-
-        var desc = bars.append("desc").text('{"stroke": "none", "stroke-width": "0px"}');
+            .attr("class", "chartTitle")
+            .text(""); // No title initially
+    
+        // Add a Y-axis (left)
+        var yAxis = d3.axisLeft(yScaleRev);
+        chart.append("g")
+            .attr("class", "axis y-axis")
+            .attr("transform", translate)
+            .call(yAxis);
     }
 
     //function to create a dropdown menu for attribute selection
@@ -293,15 +351,14 @@
             });
     }
 
-    //dropdown change listener handler
     function changeAttribute(attribute, csvData) {
-        //change the expressed attribute
+        // Change the expressed attribute
         expressed = attribute;
-
-        //recreate the color scale
+    
+        // Recreate the color scale
         var colorScale = makeColorScale(csvData);
-
-        //recolor enumeration units
+    
+        // Recolor enumeration units
         var states = d3
             .selectAll(".states")
             .transition()
@@ -314,21 +371,23 @@
                     return "#ccc";
                 }
             });
-
-        //re-sort, resize, and recolor bars
+    
+        // Re-sort, resize, and recolor bars
         var bars = d3
             .selectAll(".bar")
-            //re-sort bars
             .sort(function (a, b) {
                 return b[expressed] - a[expressed];
             })
-            .transition() //add animation
+            .transition()
             .delay(function (d, i) {
                 return i * 20;
             })
             .duration(500);
-
+    
         updateChart(bars, csvData.length, colorScale);
+    
+        // Update the footer text based on the selected attribute
+        createInfoPanel(attribute);
     }
 
     function updateChart(bars, n, colorScale) {
@@ -341,10 +400,10 @@
                 chartTitle = "Happiness Index in Each State";
                 var chartTitle = d3.select(".chartTitle").text(chartTitle).style("padding", "5px");
                 break;
-            case "GRP":
+            case "GRP (€)":
                 yScale = d3.scaleLinear().range([0, chartHeight]).domain([000, 90000]);
                 yScaleRev = d3.scaleLinear().range([chartHeight, 0]).domain([0, 90]);
-                chartTitle = "GRP in Each State (In Thousand)";
+                chartTitle = "GRP (€) Per Capita in Each State (in thousand)";
                 var chartTitle = d3.select(".chartTitle").text(chartTitle).style("padding", "5px");
                 break;
             case "Unemployment Rate (%)":
@@ -362,7 +421,7 @@
             case "Crime Rate":
                 yScale = d3.scaleLinear().range([0, chartHeight]).domain([000, 15000]);
                 yScaleRev = d3.scaleLinear().range([chartHeight, 0]).domain([0, 15]);
-                chartTitle = "Crime Rate in Each State (In Thousand)";
+                chartTitle = "Crime Rate per 100,000 people in Each State (in thousand)";
                 var chartTitle = d3.select(".chartTitle").text(chartTitle).style("padding", "5px");
         }
 
@@ -392,23 +451,19 @@
                 }
             });
 
-        //at the bottom of updateChart()...add text to chart title
-        /* var chartTitle = d3
-            .select(".chartTitle")
-            .text(chartTitle); */
     }
 
 
     //function to highlight enumeration units and bars
     function highlight(props) {
-        //change stroke
-        var selected = d3
-            .selectAll("." + props.id)
+        // Highlight the bar and state
+        d3.selectAll("." + props.id)
             .style("stroke", "blue")
             .style("stroke-width", "2");
+    
+        // Set the label with the correct properties
         setLabel(props);
     }
-
     //function to reset the element style on mouseout
     function dehighlight(props) {
         var selected = d3
@@ -431,12 +486,15 @@
         d3.select(".infolabel").remove();
     }
 
-    //function to create dynamic label
+    // Update the setLabel function
     function setLabel(props) {
-        //label content
+        // Label content
         var labelAttribute = expressed + ": <b>" + props[expressed] + "</b>";
 
-        //create info label div
+        // Determine the text color based on the expressed attribute
+        var textColor = textColors[expressed] || "#000"; // Default to black if not defined
+
+        // Create info label div
         var infolabel = d3
             .select("body")
             .append("div")
@@ -444,8 +502,12 @@
             .attr("id", props.id + "_label")
             .html(props.name);
 
-        var stateName = infolabel.append("div").attr("class", "labelname").html(labelAttribute);
-
+        // Append additional details with colored text
+        var stateName = infolabel
+            .append("div")
+            .attr("class", "labelname")
+            .html(labelAttribute)
+            .style("color", textColor); // Apply the determined text color
     }
 
     //function to move info label with mouse
