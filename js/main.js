@@ -71,7 +71,7 @@
         var path = d3.geoPath().projection(projection);
 
         d3.select(".map")
-        .style("margin-left", "240px");
+        .style("margin-left", "200px");
 
         //use Promise.all to parallelize asynchronous data loading
         var promises = [

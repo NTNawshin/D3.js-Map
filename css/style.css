@@ -86,7 +86,7 @@ h2{
 .dropdown {
     position: absolute;
     top: 180px;
-    left: 260px;
+    left: 220px;
     z-index: 10;
     font-family: Lucida Sans;
     font-size: 1em;
@@ -100,7 +100,7 @@ h2{
 .footer {
     position: absolute;
     top: 740px;
-    left: 120px;
+    left: 80px;
     z-index: 10;
     font-family: Verdana;
     font-size: 10px;
